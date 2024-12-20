@@ -4,8 +4,4 @@ COPY . .
 
 RUN pip install -r requirements.txt
 
-WORKDIR /src/
-
-EXPOSE 8000
-
 CMD ["python", "bot.py"]

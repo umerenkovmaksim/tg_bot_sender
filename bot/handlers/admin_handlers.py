@@ -2,7 +2,7 @@ from aiogram import Router, F, types
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.filters import Command
-from database import set_admin, get_user_by_telegram_id, get_all_users
+from database import get_user_by_telegram_id, get_all_users
 from bot_instance import bot
 from keyboards import text_check_kb
 
@@ -51,7 +51,7 @@ async def send_message_to_users(query: types.CallbackQuery, state: FSMContext):
 
     for user in users:
         try:
-            if not user[2]:
+            if not user['is_admin']:
                 await bot.send_message(user[0], text)
                 count += 1
         except Exception as e:

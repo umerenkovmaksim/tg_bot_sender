@@ -6,7 +6,6 @@ from aiogram.filters import Command
 
 from bot_instance import bot, dp
 from database import get_or_create_user, create_table
-from fastapi_app.app import app as fastapi_app
 from handlers.admin_handlers import router as admin_router
 from keyboards import build_service_auth_kb, subscribe_check_kb
 from config.messages import *
@@ -29,7 +28,7 @@ class CheckReqsMiddleware(BaseMiddleware):
 
         user = await get_or_create_user(telegram_id=user_id)
 
-        if not user[1]:
+        if not user['is_active']:
             kb = await build_service_auth_kb(user_id)
             await bot.send_message(
                 user_id,

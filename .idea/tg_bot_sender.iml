@@ -7,11 +7,4 @@
     <orderEntry type="jdk" jdkName="Python 3.12 virtualenv at ~/PycharmProjects/Freelance/tg_bot_sender/.venv" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
-  <component name="PyNamespacePackagesService">
-    <option name="namespacePackageFolders">
-      <list>
-        <option value="$MODULE_DIR$/src" />
-      </list>
-    </option>
-  </component>
 </module>
