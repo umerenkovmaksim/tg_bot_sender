@@ -6,6 +6,6 @@ RUN pip install -r requirements.txt
 
 WORKDIR /src/
 
-EXPOSE 8040
+EXPOSE 8000
 
 CMD ["python", "bot.py"]

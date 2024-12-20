@@ -36,6 +36,7 @@ class CheckReqsMiddleware(BaseMiddleware):
                 text=SERVICE_DATA_WAIT_MESSAGE,
                 reply_markup=kb.as_markup(),
             )
+            return
         return await handler(event, data)
 
 
@@ -55,26 +56,9 @@ async def callback_check(query: types.CallbackQuery):
     await bot.send_message(query.from_user.id, text=SUCCESS_MESSAGE)
 
 
-async def create_postback(user_id):
-    return True
-
-
-async def run_bot():
+async def main():
     await create_table()
     await dp.start_polling(bot)
-
-
-async def run_fastapi():
-    config = uvicorn.Config(app=fastapi_app, host='0.0.0.0', port=8040)
-    server = uvicorn.Server(config)
-    await server.serve()
-
-
-async def main():
-    bot_task = asyncio.create_task(run_bot())
-    fastapi_task = asyncio.create_task(run_fastapi())
-
-    await asyncio.gather(bot_task, fastapi_task)
 
 
 if __name__ == "__main__":
