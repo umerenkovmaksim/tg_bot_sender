@@ -1,5 +1,3 @@
-from tabnanny import check
-
 from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardButton
 from config.settings import API_URL
 

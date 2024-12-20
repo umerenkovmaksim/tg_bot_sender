@@ -10,28 +10,34 @@ router = Router()
 
 
 class TextForm(StatesGroup):
-    text = State()
+    chat_id = State()
+    message_id = State()
 
 
-@router.message(Command('broadcast'))
+@router.message(Command('message'))
 async def broadcast_message(message: types.Message, state: FSMContext):
     user = await get_user_by_telegram_id(message.from_user.id)
     if user and False:
         return
 
     await message.answer("Пожалуйста, укажите текст для рассылки.")
-    await state.set_state(TextForm.text)
+    await state.set_state(TextForm.message_id)
 
 
-@router.message(TextForm.text)
+@router.message(TextForm.message_id)
 async def text_confirm(message: types.Message, state: FSMContext):
-    await state.update_data(text=message.text)
+    await state.update_data(
+        message_id=message.message_id, 
+        chat_id=message.from_user.id,
+    )
     await message.answer(
         '<i>Проверьте сообщение перед отправкой</i>',
         parse_mode='HTML',
     )
-    await message.answer(
-        message.text,
+    await bot.copy_message(
+        chat_id=message.from_user.id,
+        from_chat_id=message.from_user.id,
+        message_id=message.message_id,
     )
     await message.answer(
         '<i>Начать рассылку?</i>',
@@ -47,15 +53,18 @@ async def send_message_to_users(query: types.CallbackQuery, state: FSMContext):
     users = await get_all_users()
 
     data = await state.get_data()
-    text = data['text']
 
     for user in users:
         try:
-            if not user['is_admin']:
-                await bot.send_message(user[0], text)
+            if not user.get('is_admin'):
+                await bot.copy_message(
+                    chat_id=user.get('telegram_id'),
+                    from_chat_id=data.get('chat_id'),
+                    message_id=data.get('message_id'),
+                )
                 count += 1
         except Exception as e:
-            print(f"Ошибка отправки сообщения пользователю {user[0]}: {e}")
+            print(f"Ошибка отправки сообщения пользователю {user.get('telegram_id')}: {e}")
 
     await bot.send_message(
         query.from_user.id,

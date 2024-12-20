@@ -1,5 +1,4 @@
 import asyncio
-import uvicorn
 
 from aiogram import F, BaseMiddleware, types
 from aiogram.filters import Command
@@ -15,8 +14,6 @@ from config.settings import CHANNEL_ID
 class CheckReqsMiddleware(BaseMiddleware):
     async def __call__(self, handler, event: types.Message | types.CallbackQuery, data: dict):
         user_id = event.from_user.id
-        if isinstance(event, types.CallbackQuery):
-            await event.message.delete()
         member = await bot.get_chat_member(CHANNEL_ID, user_id)
         if member.status not in ['member', 'administrator', 'creator']:
             await bot.send_message(
@@ -52,6 +49,7 @@ async def start_message(message: types.Message):
 
 @dp.callback_query(F.data == 'check')
 async def callback_check(query: types.CallbackQuery):
+    await query.message.delete()
     await bot.send_message(query.from_user.id, text=SUCCESS_MESSAGE)
 
 
