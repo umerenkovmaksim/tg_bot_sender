@@ -3,7 +3,7 @@ from config.settings import API_URL
 
 
 async def build_service_auth_kb(telegram_id):
-    url = f"{API_URL}/confirm_user?telegram_id={telegram_id}"
+    url = f"{API_URL}confirm_user?telegram_id={telegram_id}"
     kb = InlineKeyboardBuilder()
     kb.add(InlineKeyboardButton(
         text='Авторизация',
