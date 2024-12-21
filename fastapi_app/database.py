@@ -34,6 +34,7 @@ async def create_table():
 
 async def init_admins():
     async with get_db() as db:
+        await db.execute("UPDATE users SET is_admin = %s", (False,))
         for telegram_id in ADMIN_IDS:
             cursor = await db.execute("SELECT is_admin FROM users WHERE telegram_id = %s", (telegram_id,))
             admin = await cursor.fetchone()
