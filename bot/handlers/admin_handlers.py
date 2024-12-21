@@ -5,6 +5,7 @@ from aiogram.filters import Command
 from database import get_user_by_telegram_id, get_all_users
 from bot_instance import bot
 from keyboards import text_check_kb
+from config.messages import BEFORE_BROADCAST_TEXT, MESSAGE_CHECK_TEXT, START_BROADCAST_TEXT
 
 router = Router()
 
@@ -17,10 +18,10 @@ class TextForm(StatesGroup):
 @router.message(Command('message'))
 async def broadcast_message(message: types.Message, state: FSMContext):
     user = await get_user_by_telegram_id(message.from_user.id)
-    if user and False:
+    if user and user['is_admin']:
         return
 
-    await message.answer("Пожалуйста, укажите текст для рассылки.")
+    await message.answer(BEFORE_BROADCAST_TEXT)
     await state.set_state(TextForm.message_id)
 
 
@@ -31,7 +32,7 @@ async def text_confirm(message: types.Message, state: FSMContext):
         chat_id=message.from_user.id,
     )
     await message.answer(
-        '<i>Проверьте сообщение перед отправкой</i>',
+        MESSAGE_CHECK_TEXT,
         parse_mode='HTML',
     )
     await bot.copy_message(
@@ -40,7 +41,7 @@ async def text_confirm(message: types.Message, state: FSMContext):
         message_id=message.message_id,
     )
     await message.answer(
-        '<i>Начать рассылку?</i>',
+        START_BROADCAST_TEXT,
         parse_mode='HTML',
         reply_markup=text_check_kb.as_markup()
     )

@@ -1,7 +1,7 @@
 import aiomysql
 from contextlib import asynccontextmanager
 
-from config.settings import DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME
+from config.settings import DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, ADMIN_IDS
 
 
 @asynccontextmanager
@@ -30,6 +30,23 @@ async def create_table():
                 is_admin BOOLEAN DEFAULT FALSE
             );
         """)
+
+
+async def init_admins():
+    async with get_db() as db:
+        for telegram_id in ADMIN_IDS:
+            cursor = await db.execute("SELECT is_admin FROM users WHERE telegram_id = %s", (telegram_id,))
+            admin = await cursor.fetchone()
+            if not admin:
+                await cursor.execute(
+                    "INSERT INTO users (telegram_id, is_active, is_admin) VALUES (%s, %s, %s)",
+                    (telegram_id, True, True)
+                )
+            elif not admin[0]:
+                await cursor.execute(
+                    "UPDATE users SET is_admin = %s WHERE telegram_id = %s",
+                    (True, telegram_id)
+                )
 
 
 async def get_user_by_telegram_id(telegram_id):

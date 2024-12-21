@@ -30,16 +30,15 @@ class CheckReqsMiddleware(BaseMiddleware):
             member = await bot.get_chat_member(channel_id, user_id)
             if member.status not in ['member', 'administrator', 'creator']:
                 completed = False
-                text += f'❌ {channel_id}'
-                await bot.send_message(
-                    user_id,
-                    text=HELLO_MESSAGE_WITHOUT_CHANNELS,
-                    reply_markup=subscribe_check_kb.as_markup(),
-                )
+                text += f'\n❌ {channel_id}'
             else:
-                text += f'✅ {channel_id}'
-            
+                text += f'\n✅ {channel_id}'
         if not completed:
+            await bot.send_message(
+                user_id,
+                text=text,
+                reply_markup=subscribe_check_kb.as_markup(),
+            )
             return
         
         user = await get_or_create_user(telegram_id=user_id)

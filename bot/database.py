@@ -30,7 +30,8 @@ async def create_table():
                 is_admin BOOLEAN DEFAULT FALSE
             );
         """)
-        
+
+
 async def init_admins():
     async with get_db() as db:
         for telegram_id in ADMIN_IDS:
@@ -39,14 +40,14 @@ async def init_admins():
             if not admin:
                 await cursor.execute(
                     "INSERT INTO users (telegram_id, is_active, is_admin) VALUES (%s, %s, %s)",
-                    (telegram_id, True, True)  
+                    (telegram_id, True, True)
                 )
-            elif not admin[0]: 
+            elif not admin[0]:
                 await cursor.execute(
                     "UPDATE users SET is_admin = %s WHERE telegram_id = %s",
                     (True, telegram_id)
                 )
-        db.commit()
+
 
 async def get_user_by_telegram_id(telegram_id):
     async with get_db() as db:
