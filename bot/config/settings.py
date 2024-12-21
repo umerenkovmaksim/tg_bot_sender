@@ -2,3 +2,4 @@ BOT_TOKEN = "7836783041:AAFtLuQazBhqUs78zrjek9CB2W5TE8vmmOI"
 CHANNEL_ID = "@test_python_channel2"
 YOUR_ADMIN_ID = 123456789
 API_URL = 'http://83.222.24.151:8000/'
+
