@@ -1,16 +1,18 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardButton
-from config.settings import API_URL
+from config.settings import BUTTON_URL
+from config.messages import AUTH_BUTTON, AUTH_CHECK_BUTTON, SUBSCRIBE_CHECK_BUTTON
 
 
 async def build_service_auth_kb(telegram_id):
-    url = f"{API_URL}confirm_user?telegram_id={telegram_id}"
+    api_url = BUTTON_URL + '/' if BUTTON_URL[-1] != '/' else ''
+    url = f"{api_url}confirm_user?telegram_id={telegram_id}"
     kb = InlineKeyboardBuilder()
     kb.add(InlineKeyboardButton(
-        text='Авторизация',
+        text=AUTH_BUTTON,
         url=url,
     ))
     kb.add(InlineKeyboardButton(
-        text='Проверить авторизацию',
+        text=AUTH_CHECK_BUTTON,
         callback_data='check',
     ))
 
@@ -18,7 +20,7 @@ async def build_service_auth_kb(telegram_id):
 
 subscribe_check_kb = InlineKeyboardBuilder()
 subscribe_check_kb.add(InlineKeyboardButton(
-    text='Проверить подписку',
+    text=SUBSCRIBE_CHECK_BUTTON,
     callback_data='check',
 ))
 

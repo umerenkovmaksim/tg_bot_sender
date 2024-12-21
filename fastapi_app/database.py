@@ -1,15 +1,17 @@
 import aiomysql
 from contextlib import asynccontextmanager
 
+from config.settings import DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME
+
 
 @asynccontextmanager
 async def get_db():
     conn = await aiomysql.connect(
-        host='localhost',
-        port=3306,
-        user='u2948470_default',
-        password='JjWs1WV28JIh93Lw',
-        db='u2948470_default',
+        host=DB_HOST,
+        port=DB_PORT,
+        user=DB_USER,
+        password=DB_PASSWORD,
+        db=DB_NAME,
     )
     try:
         async with conn.cursor(aiomysql.DictCursor) as cursor:
